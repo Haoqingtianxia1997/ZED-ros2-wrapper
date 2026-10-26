@@ -27,7 +27,7 @@
             serial_number: 0 # overwritten by launch file
             pub_resolution: 'CUSTOM' # The resolution used for image and depth map publishing. 'NATIVE' to use the same `general.grab_resolution` - `CUSTOM` to apply the `general.pub_downscale_factor` downscale factory to reduce bandwidth in transmission
             pub_downscale_factor: 2.0 # rescale factor used to rescale image before publishing when 'pub_resolution' is 'CUSTOM'
-            pub_frame_rate: 15.0 # [DYNAMIC] Frequency of publishing of visual images and depth data (not the Point Cloud, see 'depth.point_cloud_freq'). This value must be equal or less than the camera framerate.
+            pub_frame_rate: 60.0 # [DYNAMIC] Frequency of publishing of visual images and depth data (not the Point Cloud, see 'depth.point_cloud_freq'). This value must be equal or less than the camera framerate.
             enable_image_validity_check: 1 # [SDK5 required] Sets the image validity check. If set to 1, the SDK will check if the frames are valid before processing.
             gpu_id: -1
             optional_opencv_calibration_file: '' # Optional path where the ZED SDK can find a file containing the calibration information of the camera computed by OpenCV. Read the ZED SDK documentation for more information: https://www.stereolabs.com/docs/api/structsl_1_1InitParameters.html#a9eab2753374ef3baec1d31960859ba19
@@ -37,18 +37,18 @@
 
         video:
             saturation: 4 # [DYNAMIC]
-            sharpness: 4 # [DYNAMIC]
+            sharpness: 8 # [DYNAMIC]
             gamma: 8 # [DYNAMIC]
-            auto_exposure_gain: true # [DYNAMIC]
-            exposure: 80 # [DYNAMIC]
-            gain: 80 # [DYNAMIC]
+            auto_exposure_gain: false # [DYNAMIC]
+            exposure: 30 # [DYNAMIC]
+            gain: 30 # [DYNAMIC]
             auto_whitebalance: true # [DYNAMIC]
             whitebalance_temperature: 42 # [DYNAMIC] - [28,65] x100 - works only if `auto_whitebalance` is false
             # Other parameters are defined, according to the camera model, in the 'zed.yaml', 'zedm.yaml', 'zed2.yaml', 'zed2i.yaml'
             # 'zedx.yaml', 'zedxmini.yaml', 'virtual.yaml' files
 
         sensors:
-            publish_imu_tf: false # [overwritten by launch file options] enable/disable the IMU TF broadcasting
+            publish_imu_tf: true # [overwritten by launch file options] enable/disable the IMU TF broadcasting
             sensors_image_sync: false # Synchronize Sensors messages with latest published video/depth message
             sensors_pub_rate: 100. # frequency of publishing of sensors data. MAX: 400. - MIN: grab rate
 
@@ -67,8 +67,8 @@
             apply_to_spatial_mapping: true # Apply ROI to spatial mapping processing
 
         depth:
-            depth_mode: 'NEURAL_LIGHT' # Matches the ZED SDK setting: 'NONE', 'PERFORMANCE', 'QUALITY', 'ULTRA', 'NEURAL', 'NEURAL_PLUS' - Note: if 'NONE' all the modules that requires depth extraction are disabled by default (Pos. Tracking, Obj. Detection, Mapping, ...)
-            depth_stabilization: 30 # Forces positional tracking to start if major than 0 - Range: [0,100]
+            depth_mode: 'NEURAL' # Matches the ZED SDK setting: 'NONE', 'PERFORMANCE', 'QUALITY', 'ULTRA', 'NEURAL', 'NEURAL_PLUS' - Note: if 'NONE' all the modules that requires depth extraction are disabled by default (Pos. Tracking, Obj. Detection, Mapping, ...)
+            depth_stabilization: 10 # Forces positional tracking to start if major than 0 - Range: [0,100]
             openni_depth_mode: false # 'false': 32bit float [meters], 'true': 16bit unsigned int [millimeters]
             point_cloud_freq: 10.0 # [DYNAMIC] Frequency of the pointcloud publishing. This value must be equal or less than the camera framerate.
             point_cloud_res: 'COMPACT' # The resolution used for point cloud publishing - 'COMPACT'-Standard resolution. Optimizes processing and bandwidth, 'REDUCED'-Half resolution. Low processing and bandwidth requirements
@@ -79,7 +79,7 @@
             # 'zedx.yaml', 'zedxmini.yaml', 'virtual.yaml' files
 
         pos_tracking:
-            pos_tracking_enabled: true # True to enable positional tracking from start
+            pos_tracking_enabled: false # True to enable positional tracking from start
             pos_tracking_mode: 'GEN_1' # Matches the ZED SDK setting: 'GEN_1', 'GEN_2', 'GEN_3'
             imu_fusion: true # enable/disable IMU fusion. When set to false, only the optical odometry will be used.
             publish_tf: true # [overwritten by launch file options] publish `odom -> camera_link` TF
@@ -157,7 +157,7 @@
             gop_size: -1 # [max 256] The GOP size determines the maximum distance between IDR/I-frames. Very high GOP size will result in slightly more efficient compression, especially on static scenes. But latency will increase.
             adaptative_bitrate: false # Bitrate will be adjusted depending the number of packet dropped during streaming. If activated, the bitrate can vary between [bitrate/4, bitrate].
             chunk_size: 16084 # [1024 - 65000] Stream buffers are divided into X number of chunks where each chunk is chunk_size bytes long. You can lower chunk_size value if network generates a lot of packet lost: this will generates more chunk for a single image, but each chunk sent will be lighter to avoid inside-chunk corruption. Increasing this value can decrease latency.
-            target_framerate: 0 # Framerate for the streaming output. This framerate must be below or equal to the camera framerate. Allowed framerates are 15, 30, 60 or 100 if possible. Any other values will be discarded and camera FPS will be taken.
+            target_framerate: 60 # Framerate for the streaming output. This framerate must be below or equal to the camera framerate. Allowed framerates are 15, 30, 60 or 100 if possible. Any other values will be discarded and camera FPS will be taken.
 
         advanced: # WARNING: do not modify unless you are confident of what you are doing
             # Reference documentation: https://man7.org/linux/man-pages/man7/sched.7.html
