@@ -8,6 +8,8 @@
   ROS 2 Foxy Fitzroy（Ubuntu 20.04）— ROS 2 Humble Hawksbill（Ubuntu 22.04）— ROS 2 Jazzy Jalisco（Ubuntu 24.04）
 </p>
 
+本仓库地址：[Haoqingtianxia1997/ZED-ros2-wrapper](https://github.com/Haoqingtianxia1997/ZED-ros2-wrapper)，默认分支为 `main`，包含当前设备的自定义配置。克隆和更新均使用本仓库；Stereolabs 文档、SDK 和示例链接仅作为外部参考。
+
 本说明完整翻译仓库原英文 README，并补充当前工作区的使用说明和指定设备的启动命令。版本要求及生命周期日期保留原文信息；与当前源码不一致的地方另作说明。
 
 本软件包支持在 ROS 2 中使用 ZED 相机，提供以下数据及功能：
@@ -30,7 +32,7 @@
 ### 前置条件
 
 - [Ubuntu 20.04（Focal Fossa）](https://releases.ubuntu.com/focal/)、[Ubuntu 22.04（Jammy Jellyfish）](https://releases.ubuntu.com/jammy/) 或 [Ubuntu 24.04（Noble Numbat）](https://releases.ubuntu.com/noble/)。
-- [ZED SDK](https://www.stereolabs.com/developers/release/latest/) v5.0 EA；旧版本支持请参见[历史发布版本](https://github.com/stereolabs/zed-ros2-wrapper/releases)。
+- [ZED SDK](https://www.stereolabs.com/developers/release/latest/) v5.0 EA；旧版本支持请参见[上游历史发布版本（仅供 SDK 兼容性参考）](https://github.com/stereolabs/zed-ros2-wrapper/releases)。
 - [CUDA](https://developer.nvidia.com/cuda-downloads) 依赖。
 - ROS 2 Foxy Fitzroy（已弃用）、Humble Hawksbill 或 Jazzy Jalisco：
   - [Ubuntu 20.04 上安装 Foxy](https://docs.ros.org/en/foxy/Installation/Linux-Install-Debians.html)：**不推荐，已停止维护**。
@@ -43,13 +45,13 @@
 
 > 如果还没有建立 colcon 工作区，请先参考[工作区教程](https://index.ros.org/doc/ros2/Tutorials/Colcon-Tutorial/)。
 
-打开 Bash 终端，加载已安装的 ROS 2 环境，然后克隆并编译仓库。以下保留原文的 `~/ros2_ws` 示例；本文后面的本地设备命令使用 `~/zed_ws`，请按实际工作区选择路径。已有本仓库时无需再次克隆。
+打开 Bash 终端，加载已安装的 ROS 2 环境，然后克隆并编译仓库。以下使用 `~/zed_ws`，与后面的本地设备启动命令一致。已有本仓库时无需再次克隆。
 
 ```bash
 source /opt/ros/humble/setup.bash # 示例：ROS 2 Humble
-mkdir -p ~/ros2_ws/src/ # 工作区不存在时创建
-cd ~/ros2_ws/src/ # 也可使用已有工作区的 src 目录
-git clone https://github.com/stereolabs/zed-ros2-wrapper.git
+mkdir -p ~/zed_ws/src/ # 工作区不存在时创建
+cd ~/zed_ws/src/ # 也可使用已有工作区的 src 目录
+git clone https://github.com/Haoqingtianxia1997/ZED-ros2-wrapper.git zed-ros2-wrapper
 cd ..
 sudo apt update
 rosdep update
@@ -294,11 +296,12 @@ Wrapper 使用 [NITROS](https://nvidia-isaac-ros.github.io/concepts/nitros/index
 
 ## 更新本地仓库
 
-原文通过以下命令切换到 `master` 并拉取更新，并说明其用于获取 Wrapper 及子模块的最新提交：
+进入本仓库目录，切换到 `main` 并从你的远端仓库拉取更新：
 
 ```bash
-git checkout master # 当前不在主分支时切换
-git pull
+cd ~/zed_ws/src/zed-ros2-wrapper
+git checkout main
+git pull origin main
 ```
 
 如果实际检出版本使用了子模块，还需要按对应版本的子模块配置更新。当前工作副本有自定义配置，更新前请先提交或备份这些修改。
@@ -306,20 +309,20 @@ git pull
 原文建议在重新编译前清理 colcon 工作区的构建缓存：
 
 ```bash
-cd ~/ros2_ws # 替换为实际工作区根目录；本地设备配置使用 ~/zed_ws
+cd ~/zed_ws # 替换为实际工作区根目录；本地设备配置使用 ~/zed_ws
 rm -r install
 rm -r build
 rm -r log
 colcon build --symlink-install --cmake-args=-DCMAKE_BUILD_TYPE=Release --parallel-workers $(nproc)
 ```
 
-这里修正了原文将工作区根目录示例写成 `~/ros2_ws/src/` 的问题。清理命令会删除该工作区的安装产物、构建产物和日志，运行前应确认目录；以上仅为说明，本次文档修改未执行这些命令。
+这里修正了原文将工作区根目录示例写成 `~/zed_ws/src/` 的问题。清理命令会删除该工作区的安装产物、构建产物和日志，运行前应确认目录；以上仅为说明，本次文档修改未执行这些命令。
 
 ## 已知问题
 
 原英文 README 的已知问题列表暂无报告。
 
-发现缺陷或需要新功能时，可在 [GitHub Issues](https://github.com/stereolabs/zed-ros2-wrapper/issues) 提交问题。
+发现缺陷或需要新功能时，可在 [GitHub Issues](https://github.com/Haoqingtianxia1997/ZED-ros2-wrapper/issues) 提交问题。
 
 ---
 
